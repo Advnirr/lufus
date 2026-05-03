@@ -34,7 +34,7 @@ To run Lufus, you need the following system packages:
 ### Arch Linux / CachyOS (Recommended)
 Since Lufus provides a native `PKGBUILD`, installation on Arch-based distributions is straightforward:
 ```bash
-git clone [https://github.com/Advnirr/lufus.git](https://github.com/Advnirr/lufus.git)
+git clone https://github.com/Advnirr/lufus.git
 cd lufus
 makepkg -si
 ```
@@ -42,7 +42,7 @@ makepkg -si
 ### Manual Run (Any Distro)
 You can run Lufus directly from the source code without installing it system-wide:
 ```bash
-git clone [https://github.com/Advnirr/lufus.git](https://github.com/Advnirr/lufus.git)
+git clone https://github.com/Advnirr/lufus.git
 cd lufus
 python main.py
 ```

@@ -1,0 +1,51 @@
+<img src="lufus.svg" align="right" width="180" alt="Lufus Logo">
+
+# Lufus
+
+**English | [Русский](README_ru.md)**
+
+A minimalist, functional GUI tool to create bootable Windows and Linux USB drives on Linux. Built with Python, GTK4, and libadwaita.
+
+<p align="left">
+  <a href="https://github.com/Advnirr/lufus/releases">
+    <img src="https://img.shields.io/github/v/release/Advnirr/lufus?style=flat-square&color=007EC6" alt="Release">
+  </a>
+  <a href="https://github.com/Advnirr/lufus/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/Advnirr/lufus?style=flat-square&color=FF5722" alt="License">
+  </a>
+</p>
+
+---
+
+## ⚙️ Features
+
+* **Windows Support:** Automatically detects Windows ISOs and applies the correct partition scheme (GPT/FAT32 for UEFI, or MBR/NTFS for Legacy BIOS).
+* **Large WIM Handling:** Automatically detects solid `.esd` archives and `.wim` files larger than 4GB, splitting or converting them on the fly to bypass FAT32 limitations.
+* **Linux / Isohybrid Support:** Uses direct bit-for-bit block copying via `dd` for guaranteed bootability of Linux distributions.
+* **Native:** GTK4/Adwaita interface.
+
+## 📦 Dependencies
+
+To run Lufus, you need the following system packages:
+`python-gobject`, `gtk4`, `libadwaita`, `wimlib` (for wimlib-imagex), `rsync`, `parted`, `polkit` (for pkexec), `libarchive` (for bsdtar).
+
+## 🚀 Installation
+
+### Arch Linux / CachyOS (Recommended)
+Since Lufus provides a native `PKGBUILD`, installation on Arch-based distributions is straightforward:
+```bash
+git clone [https://github.com/Advnirr/lufus.git](https://github.com/Advnirr/lufus.git)
+cd lufus
+makepkg -si
+```
+
+### Manual Run (Any Distro)
+You can run Lufus directly from the source code without installing it system-wide:
+```bash
+git clone [https://github.com/Advnirr/lufus.git](https://github.com/Advnirr/lufus.git)
+cd lufus
+python main.py
+```
+
+## License
+This project is licensed under the GNU General Public License v3.0 (GPL-3.0). See the [LICENSE](LICENSE) file for details.

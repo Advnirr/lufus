@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Arch Linux Makepkg
+pkg/
+src/
+*.pkg.tar.zst
+*.pkg.tar.xz
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp

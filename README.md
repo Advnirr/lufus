@@ -1,6 +1,6 @@
-<img src="lufus.svg" align="right" width="180" alt="Lufus Logo">
-
 # Lufus
+
+<img src="lufus.svg" align="right" width="180" alt="Lufus Logo">
 
 **English | [Русский](README_ru.md)**
 

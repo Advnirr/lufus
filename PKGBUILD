@@ -1,6 +1,6 @@
 pkgname=lufus-git
 pkgver=1.1.5
-pkgrel=1
+pkgrel=2
 pkgdesc="Minimalist GUI tool to create bootable USB drives"
 arch=('any')
 url="https://github.com/Advnirr/lufus"

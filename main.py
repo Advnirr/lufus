@@ -3,6 +3,9 @@ import os
 import subprocess
 import threading
 import re
+import sys
+import json
+from pathlib import Path
 
 gi.require_version('Gtk', '4.0')
 gi.require_version('Adw', '1')
@@ -13,9 +16,30 @@ from windows_logic import get_windows_script
 from universal_logic import get_linux_script
 
 # here I am
-APP_VERSION = "1.1.0"
+APP_VERSION = "1.1.5"
 GITHUB_URL = "https://github.com/Advnirr/lufus"
 WEB_URL = "https://advnirr.org/"
+
+CONFIG_DIR = Path.home() / ".config" / "lufus"
+CONFIG_FILE = CONFIG_DIR / "config.json"
+
+def load_config():
+    if CONFIG_FILE.exists():
+        try:
+            with open(CONFIG_FILE, "r") as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {"theme": 0, "lang": ""}
+
+def save_config(cfg):
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    with open(CONFIG_FILE, "w") as f:
+        json.dump(cfg, f)
+
+APP_CONFIG = load_config()
+if APP_CONFIG.get("lang"):
+    os.environ["LANG"] = APP_CONFIG["lang"]
 
 # Locals again
 def get_locale_dict():
@@ -63,7 +87,15 @@ def get_locale_dict():
             "err_interrupted": "Прервано пользователем",
             "btn_restart": "Начать заново",
             "btn_close_app": "Закрыть программу",
-            "btn_close_dialog": "Закрыть"
+            "btn_close_dialog": "Закрыть",
+            "settings": "Параметры",
+            "theme": "Тема оформления",
+            "theme_sys": "Системная",
+            "theme_light": "Светлая",
+            "theme_dark": "Тёмная",
+            "language": "Язык интерфейса",
+            "lang_restart_title": "Смена языка",
+            "lang_restart_body": "Новый язык будет применен после перезапуска программы."
         }
     return {
 # english locals
@@ -107,7 +139,15 @@ def get_locale_dict():
         "err_interrupted": "Interrupted by user",
         "btn_restart": "Restart",
         "btn_close_app": "Close Program",
-        "btn_close_dialog": "Close"
+        "btn_close_dialog": "Close",
+        "settings": "Settings",
+        "theme": "Theme",
+        "theme_sys": "System",
+        "theme_light": "Light",
+        "theme_dark": "Dark",
+        "language": "Language",
+        "lang_restart_title": "Language Change",
+        "lang_restart_body": "The new language will be applied after restarting the application."
     }
 
 T = get_locale_dict()
@@ -133,9 +173,20 @@ class LufusWindow(Adw.ApplicationWindow):
 
         header = Adw.HeaderBar()
         main_box.append(header)
-        about_btn = Gtk.Button(icon_name="help-about-symbolic")
-        about_btn.connect("clicked", self.show_about)
-        header.pack_end(about_btn)
+        menu = Gio.Menu.new()
+        menu.append(T["settings"], "win.settings")
+        menu.append(T["about"], "win.about")
+
+        menu_btn = Gtk.MenuButton(icon_name="open-menu-symbolic", menu_model=menu)
+        header.pack_end(menu_btn)
+
+        act_about = Gio.SimpleAction.new("about", None)
+        act_about.connect("activate", self.show_about)
+        self.add_action(act_about)
+
+        act_settings = Gio.SimpleAction.new("settings", None)
+        act_settings.connect("activate", self.show_settings)
+        self.add_action(act_settings)
 
         self.view_stack = Adw.ViewStack()
         self.view_stack.set_vexpand(True)
@@ -180,6 +231,18 @@ class LufusWindow(Adw.ApplicationWindow):
 
         self.last_drives = []
         GLib.timeout_add_seconds(2, self.auto_refresh_drives)
+        
+        self.apply_saved_theme()
+
+    def apply_saved_theme(self):
+        idx = APP_CONFIG.get("theme", 0)
+        style_mgr = Adw.StyleManager.get_default()
+        if idx == 1:
+            style_mgr.set_color_scheme(Adw.ColorScheme.FORCE_LIGHT)
+        elif idx == 2:
+            style_mgr.set_color_scheme(Adw.ColorScheme.FORCE_DARK)
+        else:
+            style_mgr.set_color_scheme(Adw.ColorScheme.DEFAULT)
 
     # --- Pages ---
 
@@ -417,15 +480,72 @@ class LufusWindow(Adw.ApplicationWindow):
 
     # --- Methods ---
 
-    def show_about(self, btn):
+    def show_about(self, action=None, param=None):
         dialog = Adw.AboutDialog(
             application_name=T["title"],
+            application_icon="lufus",
             version=APP_VERSION,
-            developer_name="Mikhail",
+            developer_name="Advnirr",
             issue_url=GITHUB_URL,
             website=WEB_URL,
         )
         dialog.present(self)
+              
+    def show_settings(self, action=None, param=None):
+        pref_dialog = Adw.PreferencesDialog(title=T["settings"])
+        
+        page = Adw.PreferencesPage()
+        group = Adw.PreferencesGroup()
+        page.add(group)
+        pref_dialog.add(page)
+
+        # themes: dark and light
+        theme_row = Adw.ComboRow(title=T.get("theme", "Тема"))
+        theme_model = Gtk.StringList.new([T.get("theme_sys", "Системная"), T.get("theme_light", "Светлая"), T.get("theme_dark", "Тёмная")])
+        theme_row.set_model(theme_model)
+        
+        theme_row.set_selected(APP_CONFIG.get("theme", 0))
+        theme_row.connect("notify::selected", self.on_theme_changed)
+        group.add(theme_row)
+
+        # langs/locals
+        lang_row = Adw.ComboRow(title=T.get("language", "Язык"))
+        lang_model = Gtk.StringList.new(["English", "Русский"])
+        lang_row.set_model(lang_model)
+        
+        current_lang = APP_CONFIG.get("lang", os.environ.get('LANG', ''))
+        lang_row.set_selected(1 if current_lang.startswith('ru') else 0)
+        lang_row.connect("notify::selected", self.on_lang_changed)
+        group.add(lang_row)
+
+        pref_dialog.present(self)
+
+    def on_theme_changed(self, combo, param):
+        idx = combo.get_selected()
+        APP_CONFIG["theme"] = idx
+        save_config(APP_CONFIG)
+        self.apply_saved_theme()
+
+    def on_lang_changed(self, combo, param):
+        idx = combo.get_selected()
+        new_lang = 'ru_RU.UTF-8' if idx == 1 else 'en_US.UTF-8'
+        
+        if APP_CONFIG.get("lang") != new_lang:
+            APP_CONFIG["lang"] = new_lang
+            save_config(APP_CONFIG)
+            os.environ['LANG'] = new_lang
+            os.execv(sys.executable, ['python'] + sys.argv)
+
+        if self.is_flashing:
+            dialog = Adw.AlertDialog(
+                heading=T["lang_restart_title"],
+                body=T["lang_restart_body"]
+            )
+            dialog.add_response("ok", T.get("btn_close_dialog", "OK"))
+            dialog.choose(self, None, lambda *args: None)
+        else:
+            os.environ['LANG'] = new_lang
+            os.execv(sys.executable, ['python'] + sys.argv)
 
     def auto_refresh_drives(self):
         if self.current_step == 0:

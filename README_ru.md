@@ -4,7 +4,7 @@
 
 **[English](README.md) | Русский**
 
-Минималистичный, функциональный инструмент с графическим интерфейсом для создания загрузочных устройств Windows и Linux на ОС Linux. Основано на Python, GTK4, и libadwaita.
+Минималистичный, универсальный и функциональный инструмент с графическим интерфейсом для создания загрузочных устройств на ОС Linux. Поддерживает как образы ISOHybrid, так и образы Windows. Основано на Python, GTK4, и Libadwaita.
 
 <p align="left">
   <a href="https://github.com/Advnirr/lufus/releases">

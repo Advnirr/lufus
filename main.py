@@ -7,19 +7,6 @@ import sys
 import json
 from pathlib import Path
 
-gi.require_version('Gtk', '4.0')
-gi.require_version('Adw', '1')
-from gi.repository import Gtk, Adw, GLib, Gio, Gdk
-
-# importing logic
-from windows_logic import get_windows_script
-from universal_logic import get_linux_script
-
-# here I am
-APP_VERSION = "1.1.5"
-GITHUB_URL = "https://github.com/Advnirr/lufus"
-WEB_URL = "https://advnirr.org/"
-
 CONFIG_DIR = Path.home() / ".config" / "lufus"
 CONFIG_FILE = CONFIG_DIR / "config.json"
 
@@ -40,6 +27,19 @@ def save_config(cfg):
 APP_CONFIG = load_config()
 if APP_CONFIG.get("lang"):
     os.environ["LANG"] = APP_CONFIG["lang"]
+
+gi.require_version('Gtk', '4.0')
+gi.require_version('Adw', '1')
+from gi.repository import Gtk, Adw, GLib, Gio, Gdk
+
+# importing logic
+from windows_logic import get_windows_script
+from universal_logic import get_linux_script
+
+# here I am
+APP_VERSION = "1.1.5"
+GITHUB_URL = "https://github.com/Advnirr/lufus"
+WEB_URL = "https://advnirr.org/"
 
 # Locals again
 def get_locale_dict():
@@ -533,8 +533,6 @@ class LufusWindow(Adw.ApplicationWindow):
         if APP_CONFIG.get("lang") != new_lang:
             APP_CONFIG["lang"] = new_lang
             save_config(APP_CONFIG)
-            os.environ['LANG'] = new_lang
-            os.execv(sys.executable, ['python'] + sys.argv)
 
         if self.is_flashing:
             dialog = Adw.AlertDialog(

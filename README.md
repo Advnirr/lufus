@@ -4,7 +4,7 @@
 
 **English | [Русский](README_ru.md)**
 
-A minimalist, functional GUI tool to create bootable Windows and Linux USB drives on Linux. Built with Python, GTK4, and libadwaita.
+A minimalist, universal, and functional GUI tool to create bootable USB drives on Linux, supporting both ISOHybrid and Windows images. Built with Python, GTK4, and Libadwaita.
 
 <p align="left">
   <a href="https://github.com/Advnirr/lufus/releases">

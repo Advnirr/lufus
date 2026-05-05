@@ -32,6 +32,13 @@ To run Lufus, you need the following system packages:
 ## 🚀 Installation
 
 ### Arch Linux / CachyOS (Recommended)
+**Installation via AUR Helper**
+The package is available on the Arch User Repository, so you can install it using Yay:
+```bash
+yay -S lufus-git
+```
+
+**Installation via PKGBUILD**
 Since Lufus provides a native `PKGBUILD`, installation on Arch-based distributions is straightforward:
 ```bash
 git clone https://github.com/Advnirr/lufus.git
@@ -46,6 +53,7 @@ git clone https://github.com/Advnirr/lufus.git
 cd lufus
 python main.py
 ```
+Note: Make sure you have the required system dependencies installed.
 
 ## License
 This project is licensed under the GNU General Public License v3.0 (GPL-3.0). See the [LICENSE](LICENSE) file for details.

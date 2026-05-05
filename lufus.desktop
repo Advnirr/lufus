@@ -1,9 +1,0 @@
-[Desktop Entry]
-Name=Lufus
-Comment=Create bootable USB drives
-Comment[ru]=Создание загрузочных USB-накопителей
-Exec=python /usr/share/lufus/main.py
-Icon=lufus
-Terminal=false
-Type=Application
-Categories=System;Utility;

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Lufux
+Comment=Create bootable USB drives
+Comment[ru]=Создание загрузочных USB-накопителей
+Exec=python /usr/share/lufux/main.py
+Icon=lufux
+Terminal=false
+Type=Application
+Categories=System;Utility;

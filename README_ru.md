@@ -1,17 +1,17 @@
 # Lufus
 
-<img src="lufus.svg" align="right" width="180" alt="Lufus Logo">
+<img src="lufux.svg" align="right" width="180" alt="Lufux Logo">
 
 **[English](README.md) | Русский**
 
 Минималистичный, универсальный и функциональный инструмент с графическим интерфейсом для создания загрузочных устройств на ОС Linux. Поддерживает как образы ISOHybrid, так и образы Windows. Основано на Python, GTK4, и Libadwaita.
 
 <p align="left">
-  <a href="https://github.com/Advnirr/lufus/releases">
-    <img src="https://img.shields.io/github/v/release/Advnirr/lufus?style=flat-square&color=007EC6" alt="Release">
+  <a href="https://github.com/Advnirr/lufux/releases">
+    <img src="https://img.shields.io/github/v/release/Advnirr/lufux?style=flat-square&color=007EC6" alt="Release">
   </a>
-  <a href="https://github.com/Advnirr/lufus/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/Advnirr/lufus?style=flat-square&color=FF5722" alt="License">
+  <a href="https://github.com/Advnirr/lufux/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/Advnirr/lufux?style=flat-square&color=FF5722" alt="License">
   </a>
 </p>
 
@@ -26,7 +26,7 @@
 
 ## 📦 Зависимости
 
-Для запуска Lufus, вам потребуются следующие системные пакеты:
+Для запуска Lufux, вам потребуются следующие системные пакеты:
 `python-gobject`, `gtk4`, `libadwaita`, `wimlib` (для wimlib-imagex), `rsync`, `parted`, `polkit` (для pkexec), `libarchive` (для bsdtar).
 
 ## 🚀 Установка
@@ -37,23 +37,23 @@
 
 Пакет доступен на Arch User Repository, поэтому вы можете установить его используя Yay:
 ```bash
-yay -S lufus-git
+yay -S lufux-git
 ```
 
 **Установка с помощью PKGBUILD**
 
-Поскольку Lufus предоставляет `PKGBUILD`, установка на Arch и его производных дистрибутивах (CachyOS, EndeavourOS, т.п) следующая:
+Поскольку Lufux предоставляет `PKGBUILD`, установка на Arch и его производных дистрибутивах (CachyOS, EndeavourOS, т.п) следующая:
 ```bash
-git clone https://github.com/Advnirr/lufus.git
+git clone https://github.com/Advnirr/lufux.git
 cd lufus
 makepkg -si
 ```
 
 ### Ручной запуск (Любой дистрибутив)
-Вы можете запустить Lufus прямо из исходного кода без установки:
+Вы можете запустить Lufux прямо из исходного кода без установки:
 ```bash
-git clone https://github.com/Advnirr/lufus.git
-cd lufus
+git clone https://github.com/Advnirr/lufux.git
+cd lufux
 python main.py
 ```
 Внимание: Убедитесь, что вы установили все необходимые зависимости.

@@ -1,17 +1,17 @@
-# Lufus
+# Lufux
 
-<img src="lufus.svg" align="right" width="180" alt="Lufus Logo">
+<img src="lufux.svg" align="right" width="180" alt="Lufux Logo">
 
 **English | [Русский](README_ru.md)**
 
 A minimalist, universal, and functional GUI tool to create bootable USB drives on Linux, supporting both ISOHybrid and Windows images. Built with Python, GTK4, and Libadwaita.
 
 <p align="left">
-  <a href="https://github.com/Advnirr/lufus/releases">
-    <img src="https://img.shields.io/github/v/release/Advnirr/lufus?style=flat-square&color=007EC6" alt="Release">
+  <a href="https://github.com/Advnirr/lufux/releases">
+    <img src="https://img.shields.io/github/v/release/Advnirr/lufux?style=flat-square&color=007EC6" alt="Release">
   </a>
-  <a href="https://github.com/Advnirr/lufus/blob/main/LICENSE">
-    <img src="https://img.shields.io/github/license/Advnirr/lufus?style=flat-square&color=FF5722" alt="License">
+  <a href="https://github.com/Advnirr/lufux/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/Advnirr/lufux?style=flat-square&color=FF5722" alt="License">
   </a>
 </p>
 
@@ -26,7 +26,7 @@ A minimalist, universal, and functional GUI tool to create bootable USB drives o
 
 ## 📦 Dependencies
 
-To run Lufus, you need the following system packages:
+To run Lufux, you need the following system packages:
 `python-gobject`, `gtk4`, `libadwaita`, `wimlib` (for wimlib-imagex), `rsync`, `parted`, `polkit` (for pkexec), `libarchive` (for bsdtar).
 
 ## 🚀 Installation
@@ -37,23 +37,23 @@ To run Lufus, you need the following system packages:
 
 The package is available on the Arch User Repository, so you can install it using Yay:
 ```bash
-yay -S lufus-git
+yay -S lufux-git
 ```
 
 **Installation via PKGBUILD**
 
-Since Lufus provides a native `PKGBUILD`, installation on Arch-based distributions is straightforward:
+Since Lufux provides a native `PKGBUILD`, installation on Arch-based distributions is straightforward:
 ```bash
-git clone https://github.com/Advnirr/lufus.git
-cd lufus
+git clone https://github.com/Advnirr/lufux.git
+cd lufux
 makepkg -si
 ```
 
 ### Manual Run (Any Distro)
-You can run Lufus directly from the source code without installing it system-wide:
+You can run Lufux directly from the source code without installing it system-wide:
 ```bash
-git clone https://github.com/Advnirr/lufus.git
-cd lufus
+git clone https://github.com/Advnirr/lufux.git
+cd lufux
 python main.py
 ```
 Note: Make sure you have the required system dependencies installed.

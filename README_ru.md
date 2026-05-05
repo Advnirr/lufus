@@ -32,6 +32,13 @@
 ## 🚀 Установка
 
 ### Arch Linux / CachyOS (Рекомендовано)
+**Установка с помощью AUR Helper**
+Пакет доступен на Arch User Repository, поэтому вы можете установить его используя Yay:
+```bash
+yay -S lufus-git
+```
+
+**Установка с помощью PKGBUILD**
 Поскольку Lufus предоставляет `PKGBUILD`, установка на Arch и его производных дистрибутивах (CachyOS, EndeavourOS, т.п) следующая:
 ```bash
 git clone https://github.com/Advnirr/lufus.git
@@ -46,6 +53,7 @@ git clone https://github.com/Advnirr/lufus.git
 cd lufus
 python main.py
 ```
+Внимание: Убедитесь, что вы установили все необходимые зависимости.
 
 ## Лицензия
 Проект лицензирован GNU General Public License v3.0 (GPL-3.0). Ознакомьтесь с [LICENSE](LICENSE) для получения дополнительной информации.

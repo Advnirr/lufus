@@ -7,7 +7,7 @@ import sys
 import json
 from pathlib import Path
 
-CONFIG_DIR = Path.home() / ".config" / "lufus"
+CONFIG_DIR = Path.home() / ".config" / "lufux"
 CONFIG_FILE = CONFIG_DIR / "config.json"
 
 def load_config():
@@ -38,7 +38,7 @@ from universal_logic import get_linux_script
 
 # here I am
 APP_VERSION = "1.1.5"
-GITHUB_URL = "https://github.com/Advnirr/lufus"
+GITHUB_URL = "https://github.com/Advnirr/lufux"
 WEB_URL = "https://advnirr.org/"
 
 # Locals again
@@ -47,7 +47,7 @@ def get_locale_dict():
     if lang.startswith('ru'):
         return {
 # russian locals
-            "title": "Lufus",
+            "title": "Lufux",
             "about": "О программе",
             "btn_next": "Далее",
             "btn_back": "Назад",
@@ -99,7 +99,7 @@ def get_locale_dict():
         }
     return {
 # english locals
-        "title": "Lufus",
+        "title": "Lufux",
         "about": "About",
         "btn_next": "Next",
         "btn_back": "Back",
@@ -152,7 +152,7 @@ def get_locale_dict():
 
 T = get_locale_dict()
 
-class LufusWindow(Adw.ApplicationWindow):
+class LufuxWindow(Adw.ApplicationWindow):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.set_title(T["title"])
@@ -451,7 +451,7 @@ class LufusWindow(Adw.ApplicationWindow):
 
     def kill_worker(self):
         self.is_flashing = False
-        subprocess.run(['pkexec', 'pkill', '-f', '/tmp/lufus.sh'], stderr=subprocess.DEVNULL)
+        subprocess.run(['pkexec', 'pkill', '-f', '/tmp/lufux.sh'], stderr=subprocess.DEVNULL)
         if self.proc:
             try:
                 self.proc.kill()
@@ -483,7 +483,7 @@ class LufusWindow(Adw.ApplicationWindow):
     def show_about(self, action=None, param=None):
         dialog = Adw.AboutDialog(
             application_name=T["title"],
-            application_icon="lufus",
+            application_icon="lufux",
             version=APP_VERSION,
             developer_name="Advnirr",
             issue_url=GITHUB_URL,
@@ -617,11 +617,11 @@ class LufusWindow(Adw.ApplicationWindow):
             script = get_linux_script(iso, dev)
 
         try:
-            with open("/tmp/lufus.sh", "w") as f: 
+            with open("/tmp/lufux.sh", "w") as f: 
                 f.write(script)
-            os.chmod("/tmp/lufus.sh", 0o755)
+            os.chmod("/tmp/lufux.sh", 0o755)
             
-            self.proc = subprocess.Popen(['pkexec', 'bash', '/tmp/lufus.sh'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+            self.proc = subprocess.Popen(['pkexec', 'bash', '/tmp/lufux.sh'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
             
             for line in iter(self.proc.stdout.readline, ''):
                 if not self.is_flashing: 
@@ -653,8 +653,8 @@ class LufusWindow(Adw.ApplicationWindow):
                     self.is_flashing = False
 
         finally:
-            if os.path.exists("/tmp/lufus.sh"): 
-                os.remove("/tmp/lufus.sh")
+            if os.path.exists("/tmp/lufux.sh"): 
+                os.remove("/tmp/lufux.sh")
 
     def on_flash_success(self):
         self.is_flashing = False
@@ -668,9 +668,9 @@ class LufusWindow(Adw.ApplicationWindow):
         self.flash_progress.set_fraction(fraction)
 
 
-class LufusApp(Adw.Application):
+class LufuxApp(Adw.Application):
     def __init__(self):
-        super().__init__(application_id="io.github.mikhail.lufus")
+        super().__init__(application_id="io.github.mikhail.lufux")
         self.connect("activate", self.on_activate)
 
     def on_activate(self, app):
@@ -687,9 +687,9 @@ class LufusApp(Adw.Application):
         """)
         Gtk.StyleContext.add_provider_for_display(Gdk.Display.get_default(), css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-        win = LufusWindow(application=app)
+        win = LufuxWindow(application=app)
         win.present()
 
 if __name__ == '__main__':
-    app = LufusApp()
+    app = LufuxApp()
     app.run(None)

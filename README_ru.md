@@ -45,7 +45,7 @@ yay -S lufux-git
 Поскольку Lufux предоставляет `PKGBUILD`, установка на Arch и его производных дистрибутивах (CachyOS, EndeavourOS, т.п) следующая:
 ```bash
 git clone https://github.com/Advnirr/lufux.git
-cd lufus
+cd lufux
 makepkg -si
 ```
 

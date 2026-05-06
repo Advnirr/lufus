@@ -271,13 +271,27 @@ class LufuxWindow(Adw.ApplicationWindow):
 
         box.append(Gtk.Label(label=T["os_type"]))
         self.os_dropdown = Gtk.DropDown.new_from_strings([T["os_win"], T["os_lin"], T["os_other"]])
+        self.os_dropdown.set_selected(2)
+        self.os_dropdown.set_size_request(280, -1)
         box.append(self.os_dropdown)
 
-        box.append(Gtk.Label(label=T["partition_scheme"]))
+        self.scheme_label = Gtk.Label(label=T["partition_scheme"])
+        self.scheme_label.set_visible(False) 
+        box.append(self.scheme_label)
+        
         self.scheme_dropdown = Gtk.DropDown.new_from_strings([T["scheme_gpt"], T["scheme_mbr"]])
+        self.scheme_dropdown.set_visible(False) 
+        self.scheme_dropdown.set_size_request(280, -1)
         box.append(self.scheme_dropdown)
 
+        self.os_dropdown.connect("notify::selected", self.on_os_changed)
+
         return page
+
+    def on_os_changed(self, dropdown, param):
+        is_windows = dropdown.get_selected() == 0
+        self.scheme_label.set_visible(is_windows)
+        self.scheme_dropdown.set_visible(is_windows)
 
     def setup_page_summary(self):
         page = Adw.StatusPage(title=T["step_summary"], icon_name="emblem-system-symbolic")

@@ -35,6 +35,7 @@ from gi.repository import Gtk, Adw, GLib, Gio, Gdk
 # importing logic
 from windows_logic import get_windows_script
 from universal_logic import get_linux_script
+from deps_logic import check_dependencies, get_distro_info, get_install_cmd
 
 # here I am
 APP_VERSION = "1.1.5"
@@ -95,7 +96,12 @@ def get_locale_dict():
             "theme_dark": "Тёмная",
             "language": "Язык интерфейса",
             "lang_restart_title": "Смена языка",
-            "lang_restart_body": "Новый язык будет применен после перезапуска программы."
+            "lang_restart_body": "Новый язык будет применен после перезапуска программы.",
+            "dep_missing_title": "Отсутствуют зависимости",
+            "dep_missing_body": "Для записи требуются системные пакеты:\n<b>{deps}</b>\n\nDetected distribution: <b>{distro}</b>\nУстановить их сейчас?",
+            "dep_unsupported": "Не хватает пакетов: <b>{deps}</b>\nПожалуйста, установите их вручную через пакетный менеджер.",
+            "btn_install": "Установить",
+            "err_code": "Код:"
         }
     return {
 # english locals
@@ -147,7 +153,12 @@ def get_locale_dict():
         "theme_dark": "Dark",
         "language": "Language",
         "lang_restart_title": "Language Change",
-        "lang_restart_body": "The new language will be applied after restarting the application."
+        "lang_restart_body": "The new language will be applied after restarting the application.",
+        "dep_missing_title": "Missing Dependencies",
+        "dep_missing_body": "The following system packages are required:\n<b>{deps}</b>\n\nDetected distribution: <b>{distro}</b>\nInstall them now?",
+        "dep_unsupported": "Missing packages: <b>{deps}</b>\nPlease install them manually using your package manager.",
+        "btn_install": "Install",
+        "err_code": "Code:"
     }
 
 T = get_locale_dict()
@@ -412,7 +423,64 @@ class LufuxWindow(Adw.ApplicationWindow):
         if "nvme" in self.selected_dev:
             self.append_log(T["nvme_lock"])
             return
+            
+        # deps check
+        missing = check_dependencies()
+        if missing:
+            self.prompt_install_dependencies(missing)
+        else:
+            self.show_warn1_dialog()
 
+    def prompt_install_dependencies(self, missing):
+        base, distro_name = get_distro_info()
+        deps_str = ", ".join(missing)
+        self.install_cmd = get_install_cmd(missing)
+        
+        if not self.install_cmd:
+            dialog = Adw.AlertDialog(
+                heading=T["dep_missing_title"],
+                body=T["dep_unsupported"].format(deps=deps_str)
+            )
+            dialog.set_body_use_markup(True)
+            dialog.add_response("ok", T["btn_close_dialog"])
+            dialog.choose(self, None, lambda *_: None)
+            return
+
+        body = T["dep_missing_body"].format(deps=deps_str, distro=distro_name)
+        dialog = Adw.AlertDialog(heading=T["dep_missing_title"], body=body)
+        dialog.set_body_use_markup(True)
+        dialog.add_response("cancel", T["btn_cancel"])
+        dialog.add_response("install", T["btn_install"])
+        dialog.set_response_appearance("install", Adw.ResponseAppearance.SUGGESTED)
+        dialog.choose(self, None, self.on_install_deps_response)
+
+    def on_install_deps_response(self, dialog, result):
+        resp = dialog.choose_finish(result)
+        if resp == "install":
+            self.btn_next.set_sensitive(False)
+            threading.Thread(target=self.install_deps_worker, daemon=True).start()
+
+    def install_deps_worker(self):
+        try:
+            proc = subprocess.run(self.install_cmd, shell=True, text=True, capture_output=True)
+            if proc.returncode == 0:
+                GLib.idle_add(self.on_deps_installed_success)
+            else:
+                GLib.idle_add(self.show_deps_error, f"{T['err_code']} {proc.returncode}:\n{proc.stderr}")
+        except Exception as e:
+            GLib.idle_add(self.show_deps_error, str(e))
+
+    def on_deps_installed_success(self):
+        self.btn_next.set_sensitive(True)
+        self.show_warn1_dialog()
+        
+    def show_deps_error(self, err_text):
+        self.btn_next.set_sensitive(True)
+        dialog = Adw.AlertDialog(heading=T["err_crit"], body=err_text[:500])
+        dialog.add_response("ok", T["btn_close_dialog"])
+        dialog.choose(self, None, lambda *_: None)
+
+    def show_warn1_dialog(self):
         dialog = Adw.AlertDialog(
             heading=T["warn1_title"],
             body=T["warn1_body"].format(dev=self.selected_dev)
@@ -663,7 +731,7 @@ class LufuxWindow(Adw.ApplicationWindow):
                     GLib.idle_add(self.append_log, T["canceled"])
                     self.is_flashing = False
                 elif self.proc.returncode != 0:
-                    GLib.idle_add(self.append_log, f"{T['err_crit']} (Код: {self.proc.returncode})")
+                    GLib.idle_add(self.append_log, f"{T['err_crit']} ({T['err_code']} {self.proc.returncode})")
                     self.is_flashing = False
 
         finally:

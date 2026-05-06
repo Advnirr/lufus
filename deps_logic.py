@@ -68,7 +68,7 @@ def get_install_cmd(missing_cmds):
     packages_str = " ".join(packages)
     
     if base == "arch":
-        return f"pkexec pacman -Sy --noconfirm {packages_str}"
+        return f"pkexec pacman -S --noconfirm {packages_str}"
     elif base == "debian":
         return f"pkexec apt-get update && pkexec apt-get install -y {packages_str}"
     elif base == "fedora":

@@ -13,3 +13,9 @@ src/
 .vscode/
 .idea/
 *.swp
+
+# Virtual Environments
+venv/
+.venv/
+env/
+.env/
